@@ -1,0 +1,427 @@
+/* LampLogin.css */
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #121417; /* Base background fallback */
+}
+
+.lamp-scene {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  transition: background 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scene-off {
+  background: #121417;
+}
+
+.scene-on {
+  /* Warm volumetric glow merging with base #1c1f24 */
+  background: radial-gradient(circle at 20% 50%, #2f2a24 0%, #1c1f24 50%, #121417 100%);
+}
+
+.room-floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 25vh;
+  background: transparent;
+  z-index: 1;
+  transition: background 1.2s ease-in-out;
+}
+
+.room-floor.on {
+  background: radial-gradient(ellipse at 20% 0%, rgba(230, 160, 80, 0.12) 0%, transparent 60%);
+  border-top: 1px solid rgba(255, 200, 100, 0.05); /* Subtle floor reflection */
+}
+
+/* -----------------------------
+   Realistic CSS Lamp
+------------------------------ */
+.lamp-container {
+  position: absolute;
+  left: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 160px;
+  height: 700px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.light-beam {
+  position: absolute;
+  top: 110px; /* Just under the shade */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px; /* Broad beam */
+  height: 1200px; 
+  background: linear-gradient(to bottom, rgba(255, 190, 80, 0.3) 0%, rgba(255, 190, 80, 0.05) 40%, transparent 100%);
+  clip-path: polygon(calc(50% - 70px) 0, calc(50% + 70px) 0, 100% 100%, 0 100%);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 1s ease-in-out 0.1s;
+}
+
+.scene-on .light-beam {
+  opacity: 1;
+}
+
+/* Base shade styling */
+.lamp-shade {
+  width: 160px;
+  height: 110px;
+  background: linear-gradient(to right, #1a1a1a, #2a2a2a, #151515);
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+  position: relative;
+  z-index: 4; /* Above the cord */
+  transition: background 0.5s ease;
+  box-shadow: inset 0 -4px 10px rgba(0,0,0,0.8);
+}
+
+.scene-on .lamp-shade {
+  background: linear-gradient(to right, #e8d0a9, #fffbf0, #e8d0a9);
+  box-shadow: inset 0 -4px 15px rgba(200, 140, 50, 0.6);
+}
+
+/* Inside of the lampshade */
+.lamp-shade-inner {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: #080808;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+
+.scene-on .lamp-shade-inner {
+  background: #ffebb0;
+  box-shadow: 0 5px 25px rgba(255, 170, 40, 0.9);
+}
+
+.lamp-pole-container {
+  width: 12px;
+  background: transparent;
+  flex: 1; /* take up remaining height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 3;
+}
+
+.lamp-pole {
+  width: 12px;
+  height: 100%;
+  background: linear-gradient(to right, #111, #333, #0a0a0a);
+  position: relative;
+  z-index: 1;
+  transition: background 0.6s ease;
+}
+
+.scene-on .lamp-pole {
+  background: linear-gradient(to right, #2a1f15, #8c7355, #150f0a);
+}
+
+.lamp-base {
+  width: 140px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(to bottom, #333, #050505);
+  position: absolute;
+  bottom: -10px;
+  z-index: 1;
+  box-shadow: 0 15px 25px rgba(0,0,0,0.9);
+  transition: background 0.6s ease;
+}
+
+.scene-on .lamp-base {
+  background: linear-gradient(to bottom, #8c7355, #2a1f15);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.9), inset 0 2px 2px rgba(255,255,255,0.1);
+}
+
+/* The Pull Cord */
+.pull-cord {
+  position: absolute;
+  top: 100px; /* Drops right out of the inner shade */
+  left: 50%; 
+  width: 50px;
+  height: 180px; 
+  transform: translateX(-50%);
+  cursor: grab;
+  z-index: 5; /* In front of pole */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pull-cord:active {
+  cursor: grabbing;
+}
+
+.cord-string {
+  width: 2px;
+  height: 140px;
+  background: linear-gradient(to right, #504432, #a08967, #504432);
+  box-shadow: 1px 0 2px rgba(0,0,0,0.6);
+  transition: background 0.4s;
+}
+
+.scene-on .cord-string {
+  background: linear-gradient(to right, #8c7355, #dab27c, #8c7355);
+}
+
+.cord-handle {
+  width: 14px;
+  height: 28px;
+  background: linear-gradient(135deg, #111, #333); 
+  border-radius: 6px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.8), inset 1px 1px 2px rgba(255,255,255,0.1);
+  margin-top: -2px;
+  transition: background 0.4s;
+}
+
+.scene-on .cord-handle {
+  background: linear-gradient(135deg, #d4af37, #99741a); /* Brass look when lit */
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.8), inset 1px 1px 4px rgba(255,255,255,0.6);
+}
+
+/* Tooltip for the pull cord */
+.pull-tooltip {
+  position: absolute;
+  top: 175px;
+  left: 60px;
+  width: max-content;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(5px);
+  padding: 6px 14px;
+  border-radius: 20px;
+  color: rgba(255,255,255,0.8);
+  font-weight: 500;
+  font-size: 0.85rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.scene-off .pull-cord:hover .pull-tooltip {
+  opacity: 1;
+}
+
+.scene-off .pull-tooltip {
+  animation: pulse-tooltip 2s infinite ease-in-out;
+}
+
+@keyframes pulse-tooltip {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* -----------------------------
+   Clean, Modern Glassmorphism Card
+------------------------------ */
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  margin-left: 20%; /* Offset because lamp is on the left */
+  z-index: 10;
+  padding: 2rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 3.5rem;
+  background: rgba(20, 22, 26, 0.45);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 30px;
+  box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.7), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.auth-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.auth-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #f8f9fa;
+  letter-spacing: -0.5px;
+  margin: 0;
+  text-shadow: 0 4px 15px rgba(255, 200, 100, 0.2);
+}
+
+.auth-subtitle {
+  color: rgba(255,255,255,0.6);
+  font-size: 1rem;
+}
+
+.glow-line {
+  width: 50px;
+  height: 4px;
+  background: linear-gradient(to right, #ffd166, #ff9f1c);
+  border-radius: 2px;
+  margin-top: 12px;
+  box-shadow: 0 0 15px rgba(255, 159, 28, 0.6);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1.4rem;
+  color: rgba(255,255,255,0.4);
+  transition: color 0.4s ease, transform 0.4s ease;
+}
+
+.input-field {
+  width: 100%;
+  padding: 1.2rem 1.4rem 1.2rem 3.6rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 1.05rem;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.input-field::placeholder { color: rgba(255,255,255,0.3); }
+
+.input-field:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.4);
+  border-color: #ff9f1c; /* match the warm light */
+  box-shadow: 0 0 0 4px rgba(255, 159, 28, 0.15), inset 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.input-field:focus + .input-icon,
+.input-field:not(:placeholder-shown) ~ .input-icon {
+  color: #ffd166;
+  transform: scale(1.1);
+}
+
+.btn-primary {
+  margin-top: 0.8rem;
+  padding: 1.2rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, #ff9f1c, #e07a00);
+  color: #fff;
+  box-shadow: 0 8px 25px -5px rgba(255, 159, 28, 0.5);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px -5px rgba(255, 159, 28, 0.6);
+  background: linear-gradient(135deg, #ffaf3d, #ff8f0a);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.auth-toggle {
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.link-register {
+  color: rgba(255,255,255,0.6);
+  font-weight: 500;
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.link-register span {
+  color: #ffd166;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+.link-register:hover span {
+  color: #fff;
+  text-shadow: 0 0 12px rgba(255, 209, 102, 0.6);
+}
+
+@media (max-width: 900px) {
+  .auth-container { margin-left: 10%; }
+}
+
+@media (max-width: 768px) {
+  .lamp-scene {
+    flex-direction: column;
+  }
+  
+  .lamp-container {
+    left: 50%;
+    transform: translate(-50%, -10%);
+    top: 5%;
+    height: 300px;
+  }
+  
+  .auth-container {
+    margin-left: 0;
+    align-items: center; /* Center since it's vertical now */
+    padding-top: 15rem; /* Make room for the lamp */
+  }
+  
+  .light-beam {
+    clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+  }
+}
