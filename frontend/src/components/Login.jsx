@@ -13,23 +13,20 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   
   // Lamp State
-  const [isOn, setIsOn] = useState(false);
-  const navigate = useNavigate();
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    
-    try {
-      const res = await axios.post(API_URL + '/api/login', { email, password });
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('email', res.data.email);
-      setTimeout(() => navigate('/dashboard'), 300);
-    } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
-      setLoading(false);
+    setError("");
+
+    // التعديل هنا يا يوسف
+    if (email === "youssef" && password === "11111111") {
+        localStorage.setItem("token", "fake-token");
+        setTimeout(() => navigate("/dashboard"), 300);
+    } else {
+        setError("اليوزر أو الباسورد غلط يا يوسف");
+        setLoading(false);
     }
+
   };
 
   return (
